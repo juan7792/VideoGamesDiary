@@ -38,11 +38,11 @@ int main()
 		cout << "1) Add user" << endl;
 		cout << "2) Select existing user" << endl;
 		cout << "Press Esc to exit program" << endl;
-
 		cout << endl;
-		user_input_1 = _getch();
 
-		switch(user_input_1)
+		SqlQuery::userInput1 = _getch();
+
+		switch(SqlQuery::userInput1)
 		{
 			case '1':
 			{
@@ -59,38 +59,134 @@ int main()
 				cout << endl;
 			}
 		}
-		if (SqlQuery::userID != "13")
+		if (SqlSelectData::counterSelectData != 0) //access instance of class
+			system("cls");
 			break;
 		pressEnter();
 		system("cls");
-	}while(user_input_1 != 27);
-
-	//cout << "Selected user ID: " << userID << endl;
+	}while(SqlQuery::userInput1 != 27);
 
 	//menu 2
 	char user_input_2;
 
-	do
+	if (SqlQuery::userInput1 != 27)
 	{
-		cout << "Users menu" << endl;
-		cout << "Choose your option and press enter: " << endl;
-		cout << "1) Add video game to pool" << endl;
-		cout << "2) Add owned game" << endl;
-		cout << "3) Add played game" << endl;
-		cout << "4) Add video game to wanted list" << endl;
-		cout << "5) View all games" << endl;
-		cout << "6) View owned games" << endl;
-		cout << "7) View played games" << endl;
-		cout << "8) View games from wanted list" << endl;
-		cout << "Press Esc to exit program" << endl;
+		do
+		{
+			cout << "Video games menu" << endl;
+			cout << "Choose your option and press enter: " << endl;
+			cout << "1) Add video game to pool" << endl;
+			cout << "2) Add owned game" << endl;
+			cout << "3) Add played game" << endl;
+			cout << "4) Add video game to wanted list" << endl;
+			cout << "5) View video games pool" << endl;
+			cout << "6) View owned games" << endl;
+			cout << "7) View played games" << endl;
+			cout << "8) View games from wanted list" << endl;
+			cout << "Press Esc to exit program" << endl;
+			cout << endl;
 
-		user_input_2 = _getch();
+			user_input_2 = _getch();
 
-	} while(user_input_2 != 27);
+			switch (user_input_2)
+			{
+				case '1':
+				{
+					cout << "This is your video game pool:" << endl;
+					cout << endl;
+
+					SqlSelectData sqlSelectData;
+					sqlSelectData.selectDataVideoGamesTable(dir);
+
+					SqlInsertData sqlInsertData;
+					sqlInsertData.insertDataVideoGamesTable(dir, SqlQuery::userID);
+					break;
+				}
+				case '2':
+				{
+					SqlSelectData sqlSelectData;
+					sqlSelectData.selectDataVideoGamesTable(dir);
+
+					string video_game_id;
+					cout << "Enter video game ID: ";
+					getline(cin, video_game_id);
+
+					SqlInsertData sqlInsertData;
+					sqlInsertData.insertDataOwnedGamesTable(dir, SqlQuery::userID, video_game_id);
+					break;
+				}
+				case '3':
+				{
+					SqlSelectData sqlSelectData;
+					sqlSelectData.selectDataVideoGamesTable(dir);
+
+					string video_game_id;
+					cout << "Enter video game ID: ";
+					getline(cin, video_game_id);
+
+					SqlInsertData sqlInsertData;
+					sqlInsertData.insertDataPlayedGamesTable(dir, SqlQuery::userID, video_game_id);
+
+					//delete entry in wanted list if exists
+					SqlDeleteData sqlDeleteData;
+					sqlDeleteData.deleteDataWantToPlayGamesTable(dir, SqlQuery::userID, video_game_id);
+					break;
+				}
+				case '4':
+				{
+					SqlSelectData sqlSelectData;
+					sqlSelectData.selectDataVideoGamesTable(dir, true);
+
+					string video_game_id;
+					cout << "Enter video game ID: ";
+					getline(cin, video_game_id);
+
+					SqlInsertData sqlInsertData;
+					sqlInsertData.insertDataWantToPlayGamesTable(dir, SqlQuery::userID, video_game_id);
+					break;
+				}
+				case '5':
+				{
+					cout << "This is your video game pool:" << endl;
+					cout << endl;
+
+					SqlSelectData sqlSelectData;
+					sqlSelectData.selectDataVideoGamesTable(dir);
+					break;
+				}
+				case '6':
+				{
+					cout << "These are your owned video games:" << endl;
+					cout << endl;
+
+					SqlSelectData sqlSelectData;
+					sqlSelectData.selectDataOwnedGamesTable(dir);
+					break;
+				}
+				case '7':
+				{
+					cout << "These are your video games you have played:" << endl;
+					cout << endl;
+
+					SqlSelectData sqlSelectData;
+					sqlSelectData.selectDataPlayedGamesTable(dir);
+					break;
+				}
+				case '8':
+				{
+					cout << "Wanted list:" << endl;
+					cout << endl;
+
+					SqlSelectData sqlSelectData;
+					sqlSelectData.selectDataWantToPlayGamesTable(dir);
+					break;
+				}
+			}
+			pressEnter();
+			system("cls");
+		} while (user_input_2 != 27);
+	}
 	
-
-	
-
 	/*SqlInsertData sqlInsertData;
 	SqlSelectData sqlSelectData;
 	sqlInsertData.insertDataUsersTable(dir); sqlSelectData.selectDataUsersTable(dir);
@@ -130,7 +226,7 @@ void createAllTables(const char* directory)
 	sqltables.createVideoGamesTable(directory);
 	sqltables.createOwnedGamesTable(directory);
 	sqltables.createPlayedGamesTable(directory);
-	sqltables.createStillPlayingGamesTable(directory);
+	//sqltables.createStillPlayingGamesTable(directory);
 	sqltables.createWantToPlayGamesTable(directory);
 }
 void pressEnter()

@@ -95,13 +95,23 @@ int SqlQuery::callback(void* NotUsed, int argc, char** argv, char** azColName)
 
 	return 0;
 }
+//Delete data method
+void SqlQuery::deleteData(const char* s, string query)
+{
+	sqlite3* DB;
+
+	int exit = sqlite3_open(s, &DB);
+
+	sqlite3_exec(DB, query.c_str(), callback, NULL, NULL);
+}
 //Get user ID (static variable)
 string SqlQuery::getID()
 {
 	return userID;
 }
-//Initialize static variable
+//Initialize static variables
 string SqlQuery::userID;
+char SqlQuery::userInput1;
 
 /*----- SUBCLASS SqlCreateTables -----*/
 //Constructor
@@ -145,10 +155,7 @@ void SqlCreateTables::createOwnedGamesTable(const char* s)
 		"user_id INTEGER, "
 		"video_game_id INTEGER, "
 		"video_game_name TEXT, "  //to avoid using a JOIN when retrieving table (simple laziness in the cunt)
-		"observations TEXT NOT NULL, "
-		"FOREIGN KEY(user_id) REFERENCES users(id), "
-		"FOREIGN KEY(video_game_id) REFERENCES video_games(id), "
-		"FOREIGN KEY(video_game_name) REFERENCES video_games(video_game_name)); ";
+		"observations TEXT NOT NULL); ";
 
 	createTables(s, sql);
 
@@ -162,15 +169,12 @@ void SqlCreateTables::createPlayedGamesTable(const char* s)
 		"video_game_name TEXT, "  //to avoid using a JOIN when retrieving table (simple laziness in the cunt)
 		"end_date TEXT NOT NULL, "
 		"rating INTEGER, "
-		"observations TEXT NOT NULL, "
-		"FOREIGN KEY(user_id) REFERENCES users(id), "
-		"FOREIGN KEY(video_game_id) REFERENCES video_games(id), "
-		"FOREIGN KEY(video_game_name) REFERENCES video_games(video_game_name)); ";
+		"observations TEXT NOT NULL); ";
 
 	createTables(s, sql);
 
 }
-//Create "still_playing_games" table
+/*//Create "still_playing_games" table
 void SqlCreateTables::createStillPlayingGamesTable(const char* s)
 {
 	string sql = "CREATE TABLE IF NOT EXISTS still_playing_games("
@@ -184,7 +188,7 @@ void SqlCreateTables::createStillPlayingGamesTable(const char* s)
 
 	createTables(s, sql);
 
-}
+}*/
 //Create "want_to_play_games" table
 void SqlCreateTables::createWantToPlayGamesTable(const char* s)
 {
@@ -193,10 +197,7 @@ void SqlCreateTables::createWantToPlayGamesTable(const char* s)
 		"video_game_id INTEGER, "
 		"video_game_name TEXT, "  //to avoid using a JOIN when retrieving table (simple laziness in the cunt)
 		"rating_interest INTEGER, "
-		"observations TEXT NOT NULL, "
-		"FOREIGN KEY(user_id) REFERENCES users(id), "
-		"FOREIGN KEY(video_game_id) REFERENCES video_games(id), "
-		"FOREIGN KEY(video_game_name) REFERENCES video_games(video_game_name)); ";
+		"observations TEXT NOT NULL); ";
 
 	createTables(s, sql);
 
@@ -227,37 +228,27 @@ void SqlInsertData::insertDataUsersTable(const char* s)
 	insertData(s, sqlStr);
 }
 //Insert data into "video_games" table
-void SqlInsertData::insertDataVideoGamesTable(const char* s)
+void SqlInsertData::insertDataVideoGamesTable(const char* s, string user_id)
 {
 	string sql = "INSERT INTO video_games(user_id, video_game_name, release_date, console) VALUES('%s', '%s', '%s', '%s');";
 
 	//variable to be added into query
-	string user_id; cout << "Enter the user ID from the list: "; getline(cin, user_id);
-	string video_game_name; cout << "Enter the name of the video game: "; getline(cin, video_game_name);
+	string video_game_name; cout << "Enter the name of the video game you want to add to your pool: "; getline(cin, video_game_name);
 	string release_date; cout << "Enter the release date of the video game (dd-mm-yyyy): "; getline(cin, release_date);
 	string console; cout << "Enter the console where the video game is available: "; getline(cin, console);
 
-	"id INTEGER PRIMARY KEY, "
-		"user_id INTEGER, "
-		"video_game_name TEXT NOT NULL, "
-		"release_date TEXT NOT NULL, "
-		"console TEXT NOT NULL, "
-		"FOREIGN KEY(user_id) REFERENCES users(id)); ";
-
 	char sqlStr[1024]; //CHANGE INTO SOMETHING SMART WITH DYNAMIC ALLOCATION, STUPID BITCH
 
-	sprintf_s(sqlStr, sql.c_str(), video_game_name.c_str(), release_date.c_str(), console.c_str());
+	sprintf_s(sqlStr, sql.c_str(), user_id.c_str(), video_game_name.c_str(), release_date.c_str(), console.c_str());
 
 	insertData(s, sqlStr);
 }
 //Insert data into "owned_games" table
-void SqlInsertData::insertDataOwnedGamesTable(const char* s)
+void SqlInsertData::insertDataOwnedGamesTable(const char* s, string user_id, string video_game_id)
 {
 	string sql = "INSERT INTO owned_games(user_id, video_game_id, video_game_name, observations) VALUES('%s', '%s', '%s', '%s');";
 
 	//variable to be added into query
-	string user_id; cout << "Enter the user ID from the list: "; getline(cin, user_id);
-	string video_game_id; cout << "Enter the video game ID from the list: "; getline(cin, video_game_id);
 	string video_game_name; cout << "Enter the video game name from the list: "; getline(cin, video_game_name);
 	string observations; cout << "Enter observations: "; getline(cin, observations);
 
@@ -268,13 +259,11 @@ void SqlInsertData::insertDataOwnedGamesTable(const char* s)
 	insertData(s, sqlStr);
 }
 //Insert data into "played_games" table
-void SqlInsertData::insertDataPlayedGamesTable(const char* s)
+void SqlInsertData::insertDataPlayedGamesTable(const char* s, string user_id, string video_game_id)
 {
 	string sql = "INSERT INTO played_games(user_id, video_game_id, video_game_name, end_date, rating, observations) VALUES('%s', '%s', '%s', '%s', '%s', '%s');";
 
 	//variable to be added into query
-	string user_id; cout << "Enter the user ID from the list: "; getline(cin, user_id);
-	string video_game_id; cout << "Enter the video game ID from the list: "; cin >> video_game_id;
 	string video_game_name; cout << "Enter the video game name from the list: "; getline(cin, video_game_name);
 	string end_date; cout << "When did you finish the game (dd-mm-yyyy)? "; getline(cin, end_date);
 	string rating; cout << "What is your rating (1-10)? "; getline(cin, rating);
@@ -286,7 +275,7 @@ void SqlInsertData::insertDataPlayedGamesTable(const char* s)
 
 	insertData(s, sqlStr);
 }
-//Insert data into "still_playing_games" table
+/*//Insert data into "still_playing_games" table
 void SqlInsertData::insertDataStillPlayingGamesTable(const char* s)
 {
 	string sql = "INSERT INTO still_playing_games(user_id, video_game_id, video_game_name, last_played_date) VALUES('%s', '%s', '%s', '%s');";
@@ -302,15 +291,13 @@ void SqlInsertData::insertDataStillPlayingGamesTable(const char* s)
 	sprintf_s(sqlStr, sql.c_str(), user_id.c_str(), video_game_id.c_str(), video_game_name.c_str(), last_played_date.c_str());
 
 	insertData(s, sqlStr);
-}
+}*/
 //Insert data into "want_to_play_games" table
-void SqlInsertData::insertDataWantToPlayGamesTable(const char* s)
+void SqlInsertData::insertDataWantToPlayGamesTable(const char* s, string user_id, string video_game_id)
 {
 	string sql = "INSERT INTO want_to_play_games(user_id, video_game_id, video_game_name, rating_interest, observations) VALUES('%s', '%s', '%s', '%s', '%s');";
 
 	//variable to be added into query
-	string user_id; cout << "Enter the user ID from the list: "; getline(cin, user_id);
-	string video_game_id; cout << "Enter the video game ID from the list: "; getline(cin, video_game_id);
 	string video_game_name; cout << "Enter the video game name from the list: "; getline(cin, video_game_name);
 	string rating_interest; cout << "Rate your interest (1-10): "; getline(cin, rating_interest);
 	string observations; cout << "Enter observations: "; getline(cin, observations);
@@ -322,8 +309,8 @@ void SqlInsertData::insertDataWantToPlayGamesTable(const char* s)
 	insertData(s, sqlStr);
 }
 /*----- SUBCLASS SqlSelectData -----*/
-//Counter to break loop - NOT USED, JUST A POSSIBILITY
-int SqlSelectData::counterSelectData;
+//Counter to break loop
+int SqlSelectData::counterSelectData = 0;
 //Constructor
 SqlSelectData::SqlSelectData() : SqlQuery() //call constructor of superclass, Maigualida
 {
@@ -334,45 +321,74 @@ SqlSelectData::~SqlSelectData()
 {
 
 }
-//Insert data into "users" table
+//Select data from "users" table
 void SqlSelectData::selectDataUsersTable(const char* s)
 {
 	string sql = "SELECT * FROM users;";
 
 	selectData(s, sql);
 }
-//Insert data into "video_games" table
+//Select data from "video_games" table
 void SqlSelectData::selectDataVideoGamesTable(const char* s)
+{
+	string sql = "SELECT id, video_game_name, release_date, console FROM video_games;";
+
+	selectData(s, sql);
+}
+//Select all data from "video_games" table
+void SqlSelectData::selectDataVideoGamesTable(const char* s, bool k)
 {
 	string sql = "SELECT * FROM video_games;";
 
 	selectData(s, sql);
 }
-//Insert data into "owned_games" table
+//Select data from "owned_games" table
 void SqlSelectData::selectDataOwnedGamesTable(const char* s)
 {
-	string sql = "SELECT * FROM owned_games;";
+	string sql = "SELECT video_game_name, observations FROM owned_games;";
 
 	selectData(s, sql);
 }
-//Insert data into "played_games" table
+//Select data from "played_games" table
 void SqlSelectData::selectDataPlayedGamesTable(const char* s)
 {
-	string sql = "SELECT * FROM played_games;";
+	string sql = "SELECT video_game_name, end_date, rating, observations FROM played_games;";
 
 	selectData(s, sql);
 }
-//Insert data into "still_playing_games" table
+/*//Select data from "still_playing_games" table
 void SqlSelectData::selectDataStillPlayingGamesTable(const char* s)
 {
 	string sql = "SELECT * FROM still_playing_games;";
 
 	selectData(s, sql);
-}
-//Insert data into "want_to_play_games" table
+}*/
+//Select data from "want_to_play_games" table
 void SqlSelectData::selectDataWantToPlayGamesTable(const char* s)
 {
-	string sql = "SELECT * FROM want_to_play_games;";
+	string sql = "SELECT video_game_name, rating_interest, observations FROM want_to_play_games;";
 
 	selectData(s, sql);
+}
+/*----- SUBCLASS SqlDeleteData -----*/
+//Constructor
+SqlDeleteData::SqlDeleteData() : SqlQuery() //call constructor of superclass, Maigualida
+{
+	
+}
+//Destructor
+SqlDeleteData::~SqlDeleteData()
+{
+
+}
+//Delete data from "want_to_play_games" table
+void SqlDeleteData::deleteDataWantToPlayGamesTable(const char* s, string user_id, string video_game_id)
+{
+	string sql = "DELETE FROM want_to_play_games WHERE user_id = %s AND video_game_id = %s;";
+
+	char sqlStr[1024]; //CHANGE INTO SOMETHING SMART WITH DYNAMIC ALLOCATION, STUPID BITCH
+
+	sprintf_s(sqlStr, sql.c_str(), user_id.c_str(), video_game_id.c_str());
+
+	deleteData(s, sqlStr);
 }
