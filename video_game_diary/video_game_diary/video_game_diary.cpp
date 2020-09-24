@@ -5,36 +5,113 @@
 #include <stdio.h>
 #include <sqlite3.h> //declaration of sqlite3 functions
 #include "queries.h" //header file with declaration of classes and instances
+#include <string.h>
+#include <string>
+#include <conio.h>
+#include <cstdlib>
 
 using namespace std;
 //methods to avoid unnecessary use of space by class instances
 void methodCreateDB(const char*);
 void createAllTables(const char*);
+void pressEnter();
+int selectID();
 
 int main()
 {
 	//directory address pointer
 	const char* dir = "C:\\Users\\Juan\\Desktop\\video_game_diary\\video_games.db";
 	
-	//functions calling class methods
+	//create DB and tables
 	methodCreateDB(dir);
 	createAllTables(dir);
 
-	SqlInsertData sqlInsertData;
-	//sqlInsertData.insertDataUsersTable(dir);
-	//sqlInsertData.insertDataVideoGamesTable(dir);
-	//sqlInsertData.insertDataOwnedGamesTable(dir);
-	//sqlInsertData.insertDataPlayedGamesTable(dir);
-	//sqlInsertData.insertDataStillPlayingGamesTable(dir);
-	sqlInsertData.insertDataWantToPlayGamesTable(dir);
+	//menu 1
+	char user_input_1; //input from first menu
 
+	SqlQuery sql;
+
+	do 
+	{
+		cout << "Users menu" << endl;
+		cout << "Choose your option and press enter: " << endl;
+		cout << "1) Add user" << endl;
+		cout << "2) Select existing user" << endl;
+		cout << "Press Esc to exit program" << endl;
+
+		cout << endl;
+		user_input_1 = _getch();
+
+		switch(user_input_1)
+		{
+			case '1':
+			{
+				SqlInsertData sqlInsertData;
+				sqlInsertData.insertDataUsersTable(dir);
+				break;
+			}
+			case '2':
+			{
+				SqlSelectData sqlSelectData;
+				sqlSelectData.selectDataUsersTable(dir);
+				cout << "Enter user ID: ";
+				getline(cin, sqlSelectData.userID);
+				cout << endl;
+			}
+		}
+		if (SqlQuery::userID != "13")
+			break;
+		pressEnter();
+		system("cls");
+	}while(user_input_1 != 27);
+
+	//cout << "Selected user ID: " << userID << endl;
+
+	//menu 2
+	char user_input_2;
+
+	do
+	{
+		cout << "Users menu" << endl;
+		cout << "Choose your option and press enter: " << endl;
+		cout << "1) Add video game to pool" << endl;
+		cout << "2) Add owned game" << endl;
+		cout << "3) Add played game" << endl;
+		cout << "4) Add video game to wanted list" << endl;
+		cout << "5) View all games" << endl;
+		cout << "6) View owned games" << endl;
+		cout << "7) View played games" << endl;
+		cout << "8) View games from wanted list" << endl;
+		cout << "Press Esc to exit program" << endl;
+
+		user_input_2 = _getch();
+
+	} while(user_input_2 != 27);
+	
+
+	
+
+	/*SqlInsertData sqlInsertData;
 	SqlSelectData sqlSelectData;
+	sqlInsertData.insertDataUsersTable(dir); sqlSelectData.selectDataUsersTable(dir);
+
+	sqlInsertData.insertDataVideoGamesTable(dir); sqlSelectData.selectDataUsersTable(dir);
+
+	sqlInsertData.insertDataOwnedGamesTable(dir); sqlSelectData.selectDataOwnedGamesTable(dir);
+
+	sqlInsertData.insertDataPlayedGamesTable(dir); sqlSelectData.selectDataPlayedGamesTable(dir);
+
+	sqlInsertData.insertDataStillPlayingGamesTable(dir); sqlSelectData.selectDataStillPlayingGamesTable(dir);
+
+	sqlInsertData.insertDataWantToPlayGamesTable(dir); sqlSelectData.selectDataWantToPlayGamesTable(dir);*/
+
+	//SqlSelectData sqlSelectData;
 	//sqlSelectData.selectDataUsersTable(dir);
 	//sqlSelectData.selectDataVideoGamesTable(dir);
 	//sqlSelectData.selectDataOwnedGamesTable(dir);
 	//sqlSelectData.selectDataPlayedGamesTable(dir);
 	//sqlSelectData.selectDataStillPlayingGamesTable(dir);
-	sqlSelectData.selectDataWantToPlayGamesTable(dir);
+	//sqlSelectData.selectDataWantToPlayGamesTable(dir);
 
 	return 0;
 }
@@ -55,4 +132,17 @@ void createAllTables(const char* directory)
 	sqltables.createPlayedGamesTable(directory);
 	sqltables.createStillPlayingGamesTable(directory);
 	sqltables.createWantToPlayGamesTable(directory);
+}
+void pressEnter()
+{
+	cout << "Press Enter to continue" << endl;
+	while (_getch() != 13); //loop undefinitely until Enter is pressed
+}
+int selectID()
+{
+	char ID;
+	cout << "Select ID: ";
+	cin >> ID;
+
+	return ID;
 }

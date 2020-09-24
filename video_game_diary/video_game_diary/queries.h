@@ -5,16 +5,19 @@ using namespace std;
 //Superclass with SQL queries
 class SqlQuery
 {
+	private:
+		//static int userID; //ID that will be selected in first menu and will then be used in second menu
 	public:
 		SqlQuery();  //Constructor
 		~SqlQuery(); //Pussy destroyer
 		void createDB(const char*);
-		void createTables(const char*, string query); //Create tables in DB - different tables created with subclass SqlCreateTables
-		void insertData(const char*, string query); //Insert data into DB - data goes to different tables, therefore use of subclass SqlInsertData
-		void selectData(const char*, string query); //Select data from tables - data comes from different tables, therefore use of subclass SqlSelectData
-		// retrieve contents of database used by selectData()
+		void createTables(const char*, string); //Create tables in DB - different tables created with subclass SqlCreateTables
+		void insertData(const char*, string); //Insert data into DB - data goes to different tables, therefore use of subclass SqlInsertData
+		void selectData(const char*, string); //Select data from tables - data comes from different tables, therefore use of subclass SqlSelectData
 		/* argc: holds the number of results, argv: holds each value in array, azColName: holds each column returned in array */
 		static int callback(void* NotUsed, int argc, char** argv, char** azColName);
+		static string userID; //ID that will be selected in first menu and will then be used in second menu
+		static string getID();
 };
 //Subclass to create necessary tables
 class SqlCreateTables : public SqlQuery
@@ -63,5 +66,6 @@ public:
 	void selectDataPlayedGamesTable(const char*);
 	void selectDataStillPlayingGamesTable(const char*);
 	void selectDataWantToPlayGamesTable(const char*);
+	static int counterSelectData; //used to break first loop - NOT USED, JUST A POSSIBILITY
 };
 #endif // QUERIES_H_INCLUDED

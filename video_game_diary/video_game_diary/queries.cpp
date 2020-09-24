@@ -2,6 +2,8 @@
 #include "queries.h"
 #include <stdio.h>
 #include <sqlite3.h>
+#include <string.h>
+#include <string>
 
 using namespace std;
 
@@ -88,11 +90,18 @@ int SqlQuery::callback(void* NotUsed, int argc, char** argv, char** azColName)
 		//column name and value
 		cout << azColName[i] << ": " << argv[i] << endl;
 	}
-
+	
 	cout << endl;
 
 	return 0;
 }
+//Get user ID (static variable)
+string SqlQuery::getID()
+{
+	return userID;
+}
+//Initialize static variable
+string SqlQuery::userID;
 
 /*----- SUBCLASS SqlCreateTables -----*/
 //Constructor
@@ -120,9 +129,11 @@ void SqlCreateTables::createVideoGamesTable(const char* s)
 {
 	string sql = "CREATE TABLE IF NOT EXISTS video_games("
 		"id INTEGER PRIMARY KEY, "
+		"user_id INTEGER, "
 		"video_game_name TEXT NOT NULL, "
 		"release_date TEXT NOT NULL, "
-		"console TEXT NOT NULL); ";
+		"console TEXT NOT NULL, "
+		"FOREIGN KEY(user_id) REFERENCES users(id)); ";
 
 	createTables(s, sql);
 
@@ -207,9 +218,7 @@ void SqlInsertData::insertDataUsersTable(const char* s)
 	string sql = "INSERT INTO users(username) VALUES('%s');";
 	
 	//variable to be added into query
-	string username;
-	cout << "Enter your username: ";
-	cin >> username;
+	string username; cout << "Enter your username: "; getline(cin, username);
 
 	char sqlStr[1024]; //CHANGE INTO SOMETHING SMART WITH DYNAMIC ALLOCATION, STUPID BITCH
 
@@ -220,12 +229,20 @@ void SqlInsertData::insertDataUsersTable(const char* s)
 //Insert data into "video_games" table
 void SqlInsertData::insertDataVideoGamesTable(const char* s)
 {
-	string sql = "INSERT INTO video_games(video_game_name, release_date, console) VALUES('%s', '%s', '%s');";
+	string sql = "INSERT INTO video_games(user_id, video_game_name, release_date, console) VALUES('%s', '%s', '%s', '%s');";
 
 	//variable to be added into query
-	string video_game_name; cout << "Enter the name of the video game: "; cin >> video_game_name;
-	string release_date; cout << "Enter the release date of the video game (dd-mm-yyyy): "; cin >> release_date;
-	string console; cout << "Enter the console where the video game is available: "; cin >> console;
+	string user_id; cout << "Enter the user ID from the list: "; getline(cin, user_id);
+	string video_game_name; cout << "Enter the name of the video game: "; getline(cin, video_game_name);
+	string release_date; cout << "Enter the release date of the video game (dd-mm-yyyy): "; getline(cin, release_date);
+	string console; cout << "Enter the console where the video game is available: "; getline(cin, console);
+
+	"id INTEGER PRIMARY KEY, "
+		"user_id INTEGER, "
+		"video_game_name TEXT NOT NULL, "
+		"release_date TEXT NOT NULL, "
+		"console TEXT NOT NULL, "
+		"FOREIGN KEY(user_id) REFERENCES users(id)); ";
 
 	char sqlStr[1024]; //CHANGE INTO SOMETHING SMART WITH DYNAMIC ALLOCATION, STUPID BITCH
 
@@ -239,10 +256,10 @@ void SqlInsertData::insertDataOwnedGamesTable(const char* s)
 	string sql = "INSERT INTO owned_games(user_id, video_game_id, video_game_name, observations) VALUES('%s', '%s', '%s', '%s');";
 
 	//variable to be added into query
-	string user_id; cout << "Enter the user ID from the list: "; cin >> user_id;
-	string video_game_id; cout << "Enter the video game ID from the list: "; cin >> video_game_id;
-	string video_game_name; cout << "Enter the video game name from the list: "; cin >> video_game_name;
-	string observations; cout << "Enter observations: "; cin >> observations;
+	string user_id; cout << "Enter the user ID from the list: "; getline(cin, user_id);
+	string video_game_id; cout << "Enter the video game ID from the list: "; getline(cin, video_game_id);
+	string video_game_name; cout << "Enter the video game name from the list: "; getline(cin, video_game_name);
+	string observations; cout << "Enter observations: "; getline(cin, observations);
 
 	char sqlStr[1024]; //CHANGE INTO SOMETHING SMART WITH DYNAMIC ALLOCATION, STUPID BITCH
 
@@ -256,12 +273,12 @@ void SqlInsertData::insertDataPlayedGamesTable(const char* s)
 	string sql = "INSERT INTO played_games(user_id, video_game_id, video_game_name, end_date, rating, observations) VALUES('%s', '%s', '%s', '%s', '%s', '%s');";
 
 	//variable to be added into query
-	string user_id; cout << "Enter the user ID from the list: "; cin >> user_id;
+	string user_id; cout << "Enter the user ID from the list: "; getline(cin, user_id);
 	string video_game_id; cout << "Enter the video game ID from the list: "; cin >> video_game_id;
-	string video_game_name; cout << "Enter the video game name from the list: "; cin >> video_game_name;
-	string end_date; cout << "When did you finish the game (dd-mm-yyyy)? "; cin >> end_date;
-	string rating; cout << "What is your rating (1-10)? "; cin >> rating;
-	string observations; cout << "Enter observations: "; cin >> observations;
+	string video_game_name; cout << "Enter the video game name from the list: "; getline(cin, video_game_name);
+	string end_date; cout << "When did you finish the game (dd-mm-yyyy)? "; getline(cin, end_date);
+	string rating; cout << "What is your rating (1-10)? "; getline(cin, rating);
+	string observations; cout << "Enter observations: "; getline(cin, observations);
 
 	char sqlStr[1024]; //CHANGE INTO SOMETHING SMART WITH DYNAMIC ALLOCATION, STUPID BITCH
 
@@ -275,10 +292,10 @@ void SqlInsertData::insertDataStillPlayingGamesTable(const char* s)
 	string sql = "INSERT INTO still_playing_games(user_id, video_game_id, video_game_name, last_played_date) VALUES('%s', '%s', '%s', '%s');";
 
 	//variable to be added into query
-	string user_id; cout << "Enter the user ID from the list: "; cin >> user_id;
-	string video_game_id; cout << "Enter the video game ID from the list: "; cin >> video_game_id;
-	string video_game_name; cout << "Enter the video game name from the list: "; cin >> video_game_name;
-	string last_played_date; cout << "When was the last time you played this game (dd-mm-yyyy)? "; cin >> last_played_date;
+	string user_id; cout << "Enter the user ID from the list: "; getline(cin, user_id);
+	string video_game_id; cout << "Enter the video game ID from the list: "; getline(cin, video_game_id);
+	string video_game_name; cout << "Enter the video game name from the list: "; getline(cin, video_game_name);
+	string last_played_date; cout << "When was the last time you played this game (dd-mm-yyyy)? "; getline(cin, last_played_date);
 
 	char sqlStr[1024]; //CHANGE INTO SOMETHING SMART WITH DYNAMIC ALLOCATION, STUPID BITCH
 
@@ -292,11 +309,11 @@ void SqlInsertData::insertDataWantToPlayGamesTable(const char* s)
 	string sql = "INSERT INTO want_to_play_games(user_id, video_game_id, video_game_name, rating_interest, observations) VALUES('%s', '%s', '%s', '%s', '%s');";
 
 	//variable to be added into query
-	string user_id; cout << "Enter the user ID from the list: "; cin >> user_id;
-	string video_game_id; cout << "Enter the video game ID from the list: "; cin >> video_game_id;
-	string video_game_name; cout << "Enter the video game name from the list: "; cin >> video_game_name;
-	string rating_interest; cout << "Rate your interest (1-10): "; cin >> rating_interest;
-	string observations; cout << "Enter observations: "; cin >> observations;
+	string user_id; cout << "Enter the user ID from the list: "; getline(cin, user_id);
+	string video_game_id; cout << "Enter the video game ID from the list: "; getline(cin, video_game_id);
+	string video_game_name; cout << "Enter the video game name from the list: "; getline(cin, video_game_name);
+	string rating_interest; cout << "Rate your interest (1-10): "; getline(cin, rating_interest);
+	string observations; cout << "Enter observations: "; getline(cin, observations);
 
 	char sqlStr[1024]; //CHANGE INTO SOMETHING SMART WITH DYNAMIC ALLOCATION, STUPID BITCH
 
@@ -305,10 +322,12 @@ void SqlInsertData::insertDataWantToPlayGamesTable(const char* s)
 	insertData(s, sqlStr);
 }
 /*----- SUBCLASS SqlSelectData -----*/
+//Counter to break loop - NOT USED, JUST A POSSIBILITY
+int SqlSelectData::counterSelectData;
 //Constructor
 SqlSelectData::SqlSelectData() : SqlQuery() //call constructor of superclass, Maigualida
 {
-
+	counterSelectData++;
 }
 //Destructor
 SqlSelectData::~SqlSelectData()
