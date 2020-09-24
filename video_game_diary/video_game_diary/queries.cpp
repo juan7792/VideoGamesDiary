@@ -174,21 +174,6 @@ void SqlCreateTables::createPlayedGamesTable(const char* s)
 	createTables(s, sql);
 
 }
-/*//Create "still_playing_games" table
-void SqlCreateTables::createStillPlayingGamesTable(const char* s)
-{
-	string sql = "CREATE TABLE IF NOT EXISTS still_playing_games("
-		"user_id INTEGER, "
-		"video_game_id INTEGER, "
-		"video_game_name TEXT, "  //to avoid using a JOIN when retrieving table (simple laziness in the cunt)
-		"last_played_date TEXT NOT NULL, "
-		"FOREIGN KEY(user_id) REFERENCES users(id), "
-		"FOREIGN KEY(video_game_id) REFERENCES video_games(id), "
-		"FOREIGN KEY(video_game_name) REFERENCES video_games(video_game_name)); ";
-
-	createTables(s, sql);
-
-}*/
 //Create "want_to_play_games" table
 void SqlCreateTables::createWantToPlayGamesTable(const char* s)
 {
@@ -275,23 +260,6 @@ void SqlInsertData::insertDataPlayedGamesTable(const char* s, string user_id, st
 
 	insertData(s, sqlStr);
 }
-/*//Insert data into "still_playing_games" table
-void SqlInsertData::insertDataStillPlayingGamesTable(const char* s)
-{
-	string sql = "INSERT INTO still_playing_games(user_id, video_game_id, video_game_name, last_played_date) VALUES('%s', '%s', '%s', '%s');";
-
-	//variable to be added into query
-	string user_id; cout << "Enter the user ID from the list: "; getline(cin, user_id);
-	string video_game_id; cout << "Enter the video game ID from the list: "; getline(cin, video_game_id);
-	string video_game_name; cout << "Enter the video game name from the list: "; getline(cin, video_game_name);
-	string last_played_date; cout << "When was the last time you played this game (dd-mm-yyyy)? "; getline(cin, last_played_date);
-
-	char sqlStr[1024]; //CHANGE INTO SOMETHING SMART WITH DYNAMIC ALLOCATION, STUPID BITCH
-
-	sprintf_s(sqlStr, sql.c_str(), user_id.c_str(), video_game_id.c_str(), video_game_name.c_str(), last_played_date.c_str());
-
-	insertData(s, sqlStr);
-}*/
 //Insert data into "want_to_play_games" table
 void SqlInsertData::insertDataWantToPlayGamesTable(const char* s, string user_id, string video_game_id)
 {
@@ -356,13 +324,6 @@ void SqlSelectData::selectDataPlayedGamesTable(const char* s)
 
 	selectData(s, sql);
 }
-/*//Select data from "still_playing_games" table
-void SqlSelectData::selectDataStillPlayingGamesTable(const char* s)
-{
-	string sql = "SELECT * FROM still_playing_games;";
-
-	selectData(s, sql);
-}*/
 //Select data from "want_to_play_games" table
 void SqlSelectData::selectDataWantToPlayGamesTable(const char* s)
 {

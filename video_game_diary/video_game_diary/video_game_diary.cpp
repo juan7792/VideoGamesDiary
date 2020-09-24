@@ -15,7 +15,6 @@ using namespace std;
 void methodCreateDB(const char*);
 void createAllTables(const char*);
 void pressEnter();
-int selectID();
 
 int main()
 {
@@ -186,28 +185,6 @@ int main()
 			system("cls");
 		} while (user_input_2 != 27);
 	}
-	
-	/*SqlInsertData sqlInsertData;
-	SqlSelectData sqlSelectData;
-	sqlInsertData.insertDataUsersTable(dir); sqlSelectData.selectDataUsersTable(dir);
-
-	sqlInsertData.insertDataVideoGamesTable(dir); sqlSelectData.selectDataUsersTable(dir);
-
-	sqlInsertData.insertDataOwnedGamesTable(dir); sqlSelectData.selectDataOwnedGamesTable(dir);
-
-	sqlInsertData.insertDataPlayedGamesTable(dir); sqlSelectData.selectDataPlayedGamesTable(dir);
-
-	sqlInsertData.insertDataStillPlayingGamesTable(dir); sqlSelectData.selectDataStillPlayingGamesTable(dir);
-
-	sqlInsertData.insertDataWantToPlayGamesTable(dir); sqlSelectData.selectDataWantToPlayGamesTable(dir);*/
-
-	//SqlSelectData sqlSelectData;
-	//sqlSelectData.selectDataUsersTable(dir);
-	//sqlSelectData.selectDataVideoGamesTable(dir);
-	//sqlSelectData.selectDataOwnedGamesTable(dir);
-	//sqlSelectData.selectDataPlayedGamesTable(dir);
-	//sqlSelectData.selectDataStillPlayingGamesTable(dir);
-	//sqlSelectData.selectDataWantToPlayGamesTable(dir);
 
 	return 0;
 }
@@ -226,19 +203,10 @@ void createAllTables(const char* directory)
 	sqltables.createVideoGamesTable(directory);
 	sqltables.createOwnedGamesTable(directory);
 	sqltables.createPlayedGamesTable(directory);
-	//sqltables.createStillPlayingGamesTable(directory);
 	sqltables.createWantToPlayGamesTable(directory);
 }
 void pressEnter()
 {
 	cout << "Press Enter to continue" << endl;
 	while (_getch() != 13); //loop undefinitely until Enter is pressed
-}
-int selectID()
-{
-	char ID;
-	cout << "Select ID: ";
-	cin >> ID;
-
-	return ID;
 }
