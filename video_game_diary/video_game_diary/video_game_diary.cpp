@@ -56,17 +56,22 @@ int main()
 				cout << "Enter user ID: ";
 				getline(cin, sqlSelectData.userID);
 				cout << endl;
+				break;
 			}
 		}
-		if (SqlSelectData::counterSelectData != 0) //access instance of class
+		if (SqlSelectData::counterSelectData != 0 && SqlQuery::userID.empty() == 0) //access instance of class
+		{
 			system("cls");
 			break;
+		}
 		pressEnter();
 		system("cls");
 	}while(SqlQuery::userInput1 != 27);
 
 	//menu 2
 	char user_input_2;
+
+	cout << SqlQuery::userID.empty() << endl;
 
 	if (SqlQuery::userInput1 != 27)
 	{
@@ -95,7 +100,7 @@ int main()
 					cout << endl;
 
 					SqlSelectData sqlSelectData;
-					sqlSelectData.selectDataVideoGamesTable(dir);
+					sqlSelectData.selectDataVideoGamesTable(dir, SqlSelectData::userID);
 
 					SqlInsertData sqlInsertData;
 					sqlInsertData.insertDataVideoGamesTable(dir, SqlQuery::userID);
@@ -104,7 +109,7 @@ int main()
 				case '2':
 				{
 					SqlSelectData sqlSelectData;
-					sqlSelectData.selectDataVideoGamesTable(dir);
+					sqlSelectData.selectDataVideoGamesTable(dir, SqlQuery::userID);
 
 					string video_game_id;
 					cout << "Enter video game ID: ";
@@ -117,7 +122,7 @@ int main()
 				case '3':
 				{
 					SqlSelectData sqlSelectData;
-					sqlSelectData.selectDataVideoGamesTable(dir);
+					sqlSelectData.selectDataVideoGamesTable(dir, SqlQuery::userID);
 
 					string video_game_id;
 					cout << "Enter video game ID: ";
@@ -134,7 +139,7 @@ int main()
 				case '4':
 				{
 					SqlSelectData sqlSelectData;
-					sqlSelectData.selectDataVideoGamesTable(dir, true);
+					sqlSelectData.selectDataVideoGamesTable(dir, SqlQuery::userID, true);
 
 					string video_game_id;
 					cout << "Enter video game ID: ";
@@ -150,7 +155,7 @@ int main()
 					cout << endl;
 
 					SqlSelectData sqlSelectData;
-					sqlSelectData.selectDataVideoGamesTable(dir);
+					sqlSelectData.selectDataVideoGamesTable(dir, SqlQuery::userID);
 					break;
 				}
 				case '6':
@@ -159,7 +164,7 @@ int main()
 					cout << endl;
 
 					SqlSelectData sqlSelectData;
-					sqlSelectData.selectDataOwnedGamesTable(dir);
+					sqlSelectData.selectDataOwnedGamesTable(dir, SqlQuery::userID);
 					break;
 				}
 				case '7':
@@ -168,7 +173,7 @@ int main()
 					cout << endl;
 
 					SqlSelectData sqlSelectData;
-					sqlSelectData.selectDataPlayedGamesTable(dir);
+					sqlSelectData.selectDataPlayedGamesTable(dir, SqlQuery::userID);
 					break;
 				}
 				case '8':
@@ -177,7 +182,7 @@ int main()
 					cout << endl;
 
 					SqlSelectData sqlSelectData;
-					sqlSelectData.selectDataWantToPlayGamesTable(dir);
+					sqlSelectData.selectDataWantToPlayGamesTable(dir, SqlQuery::userID);
 					break;
 				}
 			}

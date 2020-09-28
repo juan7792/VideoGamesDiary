@@ -58,12 +58,12 @@ public:
 	/*----- TABLES USING METHOD OF SUPERCLASS -----*/
 	//Tables for entities
 	void selectDataUsersTable(const char*); //users
-	void selectDataVideoGamesTable(const char*); //video games
+	void selectDataVideoGamesTable(const char*, string, bool);
+	void selectDataVideoGamesTable(const char*, string); //video games
 	//Tables for actions (relational)
-	void selectDataOwnedGamesTable(const char*);
-	void selectDataPlayedGamesTable(const char*);
-	void selectDataVideoGamesTable(const char*, bool);
-	void selectDataWantToPlayGamesTable(const char*);
+	void selectDataOwnedGamesTable(const char*, string);
+	void selectDataPlayedGamesTable(const char*, string);
+	void selectDataWantToPlayGamesTable(const char*, string);
 	static int counterSelectData; //used to break first loop
 };
 //Subclass to delete data from tables

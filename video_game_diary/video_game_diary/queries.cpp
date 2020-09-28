@@ -297,39 +297,59 @@ void SqlSelectData::selectDataUsersTable(const char* s)
 	selectData(s, sql);
 }
 //Select data from "video_games" table
-void SqlSelectData::selectDataVideoGamesTable(const char* s)
+void SqlSelectData::selectDataVideoGamesTable(const char* s, string user_id)
 {
-	string sql = "SELECT id, video_game_name, release_date, console FROM video_games;";
+	string sql = "SELECT id, video_game_name, release_date, console FROM video_games WHERE user_id='%s';";
 
-	selectData(s, sql);
+	char sqlStr[1024];
+
+	sprintf_s(sqlStr, sql.c_str(), user_id.c_str());
+
+	selectData(s, sqlStr);
 }
 //Select all data from "video_games" table
-void SqlSelectData::selectDataVideoGamesTable(const char* s, bool k)
+void SqlSelectData::selectDataVideoGamesTable(const char* s, string user_id, bool k)
 {
-	string sql = "SELECT * FROM video_games;";
+	string sql = "SELECT * FROM video_games WHERE user_id='%s';"; 
+	
+	char sqlStr[1024];
 
-	selectData(s, sql);
+	sprintf_s(sqlStr, sql.c_str(), user_id.c_str());
+
+	selectData(s, sqlStr);
 }
 //Select data from "owned_games" table
-void SqlSelectData::selectDataOwnedGamesTable(const char* s)
+void SqlSelectData::selectDataOwnedGamesTable(const char* s, string user_id)
 {
-	string sql = "SELECT video_game_name, observations FROM owned_games;";
+	string sql = "SELECT video_game_name, observations FROM owned_games WHERE user_id='%s';";
 
-	selectData(s, sql);
+	char sqlStr[1024];
+
+	sprintf_s(sqlStr, sql.c_str(), user_id.c_str());
+
+	selectData(s, sqlStr);
 }
 //Select data from "played_games" table
-void SqlSelectData::selectDataPlayedGamesTable(const char* s)
+void SqlSelectData::selectDataPlayedGamesTable(const char* s, string user_id)
 {
-	string sql = "SELECT video_game_name, end_date, rating, observations FROM played_games;";
+	string sql = "SELECT video_game_name, end_date, rating, observations FROM played_games WHERE user_id='%s';";
 
-	selectData(s, sql);
+	char sqlStr[1024];
+
+	sprintf_s(sqlStr, sql.c_str(), user_id.c_str());
+
+	selectData(s, sqlStr);
 }
 //Select data from "want_to_play_games" table
-void SqlSelectData::selectDataWantToPlayGamesTable(const char* s)
+void SqlSelectData::selectDataWantToPlayGamesTable(const char* s, string user_id)
 {
-	string sql = "SELECT video_game_name, rating_interest, observations FROM want_to_play_games;";
+	string sql = "SELECT video_game_name, rating_interest, observations FROM want_to_play_games WHERE user_id='%s';";
 
-	selectData(s, sql);
+	char sqlStr[1024];
+
+	sprintf_s(sqlStr, sql.c_str(), user_id.c_str());
+
+	selectData(s, sqlStr);
 }
 /*----- SUBCLASS SqlDeleteData -----*/
 //Constructor
