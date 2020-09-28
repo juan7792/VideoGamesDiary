@@ -71,8 +71,6 @@ int main()
 	//menu 2
 	char user_input_2;
 
-	cout << SqlQuery::userID.empty() << endl;
-
 	if (SqlQuery::userInput1 != 27)
 	{
 		do
@@ -96,7 +94,7 @@ int main()
 			{
 				case '1':
 				{
-					cout << "This is your video game pool:" << endl;
+					cout << "This is your current video game pool:" << endl;
 					cout << endl;
 
 					SqlSelectData sqlSelectData;
