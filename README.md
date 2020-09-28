@@ -1,6 +1,6 @@
 # VideoGamesDiary
 
-This program was written in C++ with the help of the sqlite3-C++ package and sqlite3.h. Using object oriented programming in C++, with help the sqlite3 package, this program stores in a DB the name and details of the user's video games using an console interface
+This program was written in C++ with the help of the sqlite3-C++ package and sqlite3.h. Using object oriented programming in C++, with help the sqlite3 package, this program stores in a DB the name and details of the user's video games using an console interface. The flowchart of the program is available in VideoGameDiary.pdf.
 
 ## Summary
 
