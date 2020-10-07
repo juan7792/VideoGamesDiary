@@ -154,7 +154,7 @@ void SqlCreateTables::createOwnedGamesTable(const char* s)
 	string sql = "CREATE TABLE IF NOT EXISTS owned_games("
 		"user_id INTEGER, "
 		"video_game_id INTEGER, "
-		"video_game_name TEXT, "  //to avoid using a JOIN when retrieving table (simple laziness in the cunt)
+		"video_game_name TEXT, "  //JOIN
 		"observations TEXT NOT NULL); ";
 
 	createTables(s, sql);
@@ -166,7 +166,7 @@ void SqlCreateTables::createPlayedGamesTable(const char* s)
 	string sql = "CREATE TABLE IF NOT EXISTS played_games("
 		"user_id INTEGER, "
 		"video_game_id INTEGER, "
-		"video_game_name TEXT, "  //to avoid using a JOIN when retrieving table (simple laziness in the cunt)
+		"video_game_name TEXT, "  //JOIN
 		"end_date TEXT NOT NULL, "
 		"rating INTEGER, "
 		"observations TEXT NOT NULL); ";
@@ -180,7 +180,7 @@ void SqlCreateTables::createWantToPlayGamesTable(const char* s)
 	string sql = "CREATE TABLE IF NOT EXISTS want_to_play_games("
 		"user_id INTEGER, "
 		"video_game_id INTEGER, "
-		"video_game_name TEXT, "  //to avoid using a JOIN when retrieving table (simple laziness in the cunt)
+		"video_game_name TEXT, "  //JOIN
 		"rating_interest INTEGER, "
 		"observations TEXT NOT NULL); ";
 
@@ -206,7 +206,7 @@ void SqlInsertData::insertDataUsersTable(const char* s)
 	//variable to be added into query
 	string username; cout << "Enter your username: "; getline(cin, username);
 
-	char sqlStr[1024]; //CHANGE INTO SOMETHING SMART WITH DYNAMIC ALLOCATION, STUPID BITCH
+	char sqlStr[1024]; //change into something according to the real memory needed for the query
 
 	sprintf_s(sqlStr, sql.c_str(), username.c_str());
 
@@ -222,7 +222,7 @@ void SqlInsertData::insertDataVideoGamesTable(const char* s, string user_id)
 	string release_date; cout << "Enter the release date of the video game (dd-mm-yyyy): "; getline(cin, release_date);
 	string console; cout << "Enter the console where the video game is available: "; getline(cin, console);
 
-	char sqlStr[1024]; //CHANGE INTO SOMETHING SMART WITH DYNAMIC ALLOCATION, STUPID BITCH
+	char sqlStr[1024]; //change into something according to the real memory needed for the query
 
 	sprintf_s(sqlStr, sql.c_str(), user_id.c_str(), video_game_name.c_str(), release_date.c_str(), console.c_str());
 
@@ -237,7 +237,7 @@ void SqlInsertData::insertDataOwnedGamesTable(const char* s, string user_id, str
 	string video_game_name; cout << "Enter the video game name from the list: "; getline(cin, video_game_name);
 	string observations; cout << "Enter observations: "; getline(cin, observations);
 
-	char sqlStr[1024]; //CHANGE INTO SOMETHING SMART WITH DYNAMIC ALLOCATION, STUPID BITCH
+	char sqlStr[1024]; //change into something according to the real memory needed for the query
 
 	sprintf_s(sqlStr, sql.c_str(), user_id.c_str(), video_game_id.c_str(), video_game_name.c_str(), observations.c_str());
 
@@ -254,7 +254,7 @@ void SqlInsertData::insertDataPlayedGamesTable(const char* s, string user_id, st
 	string rating; cout << "What is your rating (1-10)? "; getline(cin, rating);
 	string observations; cout << "Enter observations: "; getline(cin, observations);
 
-	char sqlStr[1024]; //CHANGE INTO SOMETHING SMART WITH DYNAMIC ALLOCATION, STUPID BITCH
+	char sqlStr[1024]; //change into something according to the real memory needed for the query
 
 	sprintf_s(sqlStr, sql.c_str(), user_id.c_str(), video_game_id.c_str(), video_game_name.c_str(), end_date.c_str(), rating.c_str(), observations.c_str());
 
@@ -270,7 +270,7 @@ void SqlInsertData::insertDataWantToPlayGamesTable(const char* s, string user_id
 	string rating_interest; cout << "Rate your interest (1-10): "; getline(cin, rating_interest);
 	string observations; cout << "Enter observations: "; getline(cin, observations);
 
-	char sqlStr[1024]; //CHANGE INTO SOMETHING SMART WITH DYNAMIC ALLOCATION, STUPID BITCH
+	char sqlStr[1024]; //change into something according to the real memory needed for the query
 
 	sprintf_s(sqlStr, sql.c_str(), user_id.c_str(), video_game_id.c_str(), video_game_name.c_str(), rating_interest.c_str(), observations.c_str());
 
@@ -367,7 +367,7 @@ void SqlDeleteData::deleteDataWantToPlayGamesTable(const char* s, string user_id
 {
 	string sql = "DELETE FROM want_to_play_games WHERE user_id = %s AND video_game_id = %s;";
 
-	char sqlStr[1024]; //CHANGE INTO SOMETHING SMART WITH DYNAMIC ALLOCATION, STUPID BITCH
+	char sqlStr[1024]; //change into something according to the real memory needed for the query
 
 	sprintf_s(sqlStr, sql.c_str(), user_id.c_str(), video_game_id.c_str());
 

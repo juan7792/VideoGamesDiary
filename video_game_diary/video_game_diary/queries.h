@@ -24,7 +24,7 @@ class SqlCreateTables : public SqlQuery
 {
 	public:
 		SqlCreateTables(); //Constructor
-		~SqlCreateTables(); //Pussy destroyer
+		~SqlCreateTables(); //Destructor
 		/*----- TABLES USING METHOD OF SUPERCLASS -----*/
 		//Tables for entities
 		void createUsersTable(const char*);

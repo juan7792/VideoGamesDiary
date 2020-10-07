@@ -59,7 +59,7 @@ int main()
 				break;
 			}
 		}
-		if (SqlSelectData::counterSelectData != 0 && SqlQuery::userID.empty() == 0) //access instance of class
+		if (SqlSelectData::counterSelectData != 0 && SqlQuery::userID.empty() == 0) //access static instance of class
 		{
 			system("cls");
 			break;
